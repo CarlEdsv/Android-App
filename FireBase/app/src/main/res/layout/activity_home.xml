@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#A4A6C4D8"
+    android:background="#ECEFF1"
     tools:context=".Home">
 
     <LinearLayout
@@ -42,7 +42,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:backgroundTint="#2196F3"
-            android:text="Regresar" />
+            android:text="Regresar"
+            android:textColor="#FFFFFF" />
 
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -13,8 +13,6 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
 class Home : AppCompatActivity() {
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
@@ -25,7 +23,6 @@ class Home : AppCompatActivity() {
         recycler.layoutManager = LinearLayoutManager(this)
         // Agrega un espaciado de 16dp entre cada elemento
         recycler.addItemDecoration(ItemRecycler(16))
-
 
         val myList = arrayListOf<Data>()
 
@@ -48,11 +45,10 @@ class Home : AppCompatActivity() {
             }
 
 
-        //myList.clear()
 
         val regresar = findViewById<Button>(R.id.returnButton)
         regresar.setOnClickListener {
-            val intent = Intent(this, MainActivity::class.java)
+            val intent = Intent(this, Activity2::class.java)
             startActivity(intent)
         }
 
