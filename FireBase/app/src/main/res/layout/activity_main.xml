@@ -8,6 +8,7 @@
     tools:context=".MainActivity">
 
     <LinearLayout
+        android:id="@+id/authLayout"
         android:layout_width="409dp"
         android:layout_height="729dp"
         android:layout_marginStart="16dp"

@@ -31,19 +31,20 @@ class Home : AppCompatActivity() {
             .addOnSuccessListener { result ->
                 for (document in result) {
                     val student = document.data
-                    myList.add(Data(
-                        "Nombre: "+student["nombre"],
-                        "Edad: "+student["edad"].toString(),
-                        "Grado: "+student["grado"]
-                    )
-                    )
+                    if (student.containsKey("nombre") && student.containsKey("edad") && student.containsKey("grado")) {
+                        myList.add(Data(
+                            "Nombre: "+student["nombre"],
+                            "Edad: "+student["edad"].toString(),
+                            "Grado: "+student["grado"]
+                        )
+                        )
+                    }
                     recycler.adapter = Adaptador(myList)
                 }
             }
             .addOnFailureListener { exception ->
                 Toast.makeText(this,"Consulta de datos fallida: $exception",Toast.LENGTH_LONG).show()
             }
-
 
 
         val regresar = findViewById<Button>(R.id.returnButton)
