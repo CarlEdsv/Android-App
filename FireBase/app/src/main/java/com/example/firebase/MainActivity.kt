@@ -1,6 +1,6 @@
 package com.example.firebase
 
-import android.content.Context
+import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -36,39 +36,28 @@ class MainActivity : AppCompatActivity() {
 
         val reg = findViewById<Button>(R.id.signupButton)
         reg.setOnClickListener {
-            if (email.text.isEmpty()||password.text.isEmpty()){
-                Toast.makeText(this,"Ingrese los datos",Toast.LENGTH_LONG).show()
-            }else{
-                auth.createUserWithEmailAndPassword(email.text.toString(), password.text.toString())
-                    .addOnCompleteListener(this) {
-                        if (it.isSuccessful) {
-                            activity2(it.result?.user?.email?: "", ProviderType.BASIC)
-                        } else {
-                            showAlert()
-                        }
-                    }
-
-            }
+            signUp(email, password)
         }
 
         val log = findViewById<Button>(R.id.loginButton)
         log.setOnClickListener {
-            if (email.text.isEmpty()||password.text.isEmpty()){
-                Toast.makeText(this,"Ingrese los datos",Toast.LENGTH_LONG).show()
-            }else{
-                auth.signInWithEmailAndPassword(email.text.toString(), password.text.toString())
-                    .addOnCompleteListener(this) {
-                        if (it.isSuccessful) {
-                            activity2(it.result?.user?.email?: "", ProviderType.BASIC)
-                        } else {
-                            showAlert()
-                        }
-                    }
-
-            }
+            logIn(email, password,Students::class.java,ProviderType.BASIC)
         }
 
-        //session()
+        ///////////////////////////////////////////////////////////////////////////////////////////
+
+        val email2 = findViewById<EditText>(R.id.emailText2)
+        val password2 = findViewById<EditText>(R.id.passwText2)
+
+        val reg2 = findViewById<Button>(R.id.signupButton2)
+        reg2.setOnClickListener {
+            signUp(email2,password2)
+        }
+        val log2 = findViewById<Button>(R.id.loginButton2)
+        log2.setOnClickListener {
+            logIn(email2, password2, Teachers::class.java, ProviderType.BASIC)
+        }
+
     }
 
     override fun onStart() {
@@ -76,8 +65,13 @@ class MainActivity : AppCompatActivity() {
         val authLayout = findViewById<LinearLayout>(R.id.authLayout)
         authLayout.visibility = View.VISIBLE
         val currentUser = auth.currentUser
-        if (currentUser != null) {
-            startActivity(Intent(this, Activity2::class.java))
+        currentUser?.let {
+            val email = it.email.toString()
+            if (email.contains("@ugb.edu.sv")){
+                onActivity(Teachers::class.java)
+            }else{
+                onActivity(Students::class.java)
+            }
         }
     }
 
@@ -91,23 +85,46 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    private fun activity2(email : String, provider: ProviderType){
-        val intent = Intent(this, Activity2::class.java).apply {
-            putExtra("email",email)
-            putExtra("provider",provider.name)
-        }
+    private fun onActivity(context: Class<out Activity>) {
+        val intent = Intent(this, context)
         startActivity(intent)
     }
 
-    private fun session(){
-        val logData = getSharedPreferences(getString(R.string.prefs_file), Context.MODE_PRIVATE)
-        val email = logData.getString("email",null)
-        val provider = logData.getString("provider",null)
-        if(email != null && provider != null){
-            val authLayout = findViewById<LinearLayout>(R.id.authLayout)
-            authLayout.visibility = View.INVISIBLE
-            activity2(email,ProviderType.BASIC)
+    private fun signUp(email:EditText, password: EditText){
+        if (email.text.isBlank()||password.text.isBlank()){
+            Toast.makeText(this,"Ingrese los datos",Toast.LENGTH_LONG).show()
+        }else{
+            auth.createUserWithEmailAndPassword(email.text.toString(), password.text.toString())
+                .addOnCompleteListener(this) {
+                    if(it.isSuccessful){
+                        Toast.makeText(this, "Registro exitoso", Toast.LENGTH_LONG).show()
+                    }else{
+                        showAlert()
+                    }
+
+                }
         }
+    }
+
+    private fun logIn(email:EditText, password: EditText, activity:Class<out Activity>, provider: ProviderType){
+        if (email.text.isBlank()||password.text.isBlank()){
+            Toast.makeText(this,"Ingrese los datos",Toast.LENGTH_LONG).show()
+        }else{
+            auth.signInWithEmailAndPassword(email.text.toString(), password.text.toString())
+                .addOnCompleteListener(this) {
+                    if (it.isSuccessful) {
+                        val intent = Intent(this, activity).apply {
+                            putExtra("email", email.text.toString())
+                            putExtra("provider",provider.name)
+                        }
+                        startActivity(intent)
+                    } else {
+                        showAlert()
+                    }
+                }
+
+        }
+
     }
 }
 

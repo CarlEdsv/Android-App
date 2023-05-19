@@ -8,17 +8,17 @@ import androidx.recyclerview.widget.RecyclerView
 
 
 data class Data(
-    val name: String,
-    val age: String,
-    val grade: String,
+    val text1: String,
+    val text2: String,
+    val text3: String,
 )
 
 class Adaptador(private val data: List<Data>) :RecyclerView.Adapter<Adaptador.ViewHolder>() {
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val nombre = itemView.findViewById<TextView>(R.id.textView1)
-        val edad = itemView.findViewById<TextView>(R.id.textView2)
-        val grado = itemView.findViewById<TextView>(R.id.textView3)
+        val txt1 = itemView.findViewById<TextView>(R.id.textView1)
+        val txt2 = itemView.findViewById<TextView>(R.id.textView2)
+        val txt3 = itemView.findViewById<TextView>(R.id.textView3)
 
     }
 
@@ -29,9 +29,9 @@ class Adaptador(private val data: List<Data>) :RecyclerView.Adapter<Adaptador.Vi
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val datos = data[position]
-        holder.nombre.text = datos.name
-        holder.edad.text = datos.age
-        holder.grado.text = datos.grade
+        holder.txt1.text = datos.text1
+        holder.txt2.text = datos.text2
+        holder.txt3.text = datos.text3
     }
 
     override fun getItemCount(): Int {

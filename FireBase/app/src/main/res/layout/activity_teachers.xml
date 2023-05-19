@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#ECEFF1"
-    tools:context=".Activity2" >
+    tools:context=".Teachers">
 
     <LinearLayout
         android:layout_width="409dp"
@@ -23,27 +23,27 @@
         ]]>
 
         <EditText
-            android:id="@+id/nameText"
+            android:id="@+id/nameText2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
             android:hint="Nombre"
             android:inputType="text"
-            android:textColorHint="#000000"
-            android:textColor="@android:color/black"/>
+            android:textColor="@android:color/black"
+            android:textColorHint="#000000" />
 
         <EditText
-            android:id="@+id/ageText"
+            android:id="@+id/ageText2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
             android:hint="Edad"
             android:inputType="number"
-            android:textColorHint="#000000"
-            android:textColor="@android:color/black"/>
+            android:textColor="@android:color/black"
+            android:textColorHint="#000000" />
 
         <Spinner
-            android:id="@+id/spinner"
+            android:id="@+id/spinner2"
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:background="#FF8A65"
@@ -60,7 +60,7 @@
             android:orientation="horizontal">
 
             <Button
-                android:id="@+id/addButton"
+                android:id="@+id/addButton2"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -73,7 +73,7 @@
                 android:layout_height="wrap_content" />
 
             <Button
-                android:id="@+id/showButtton"
+                android:id="@+id/showButtton2"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -83,7 +83,7 @@
         </LinearLayout>
 
         <Button
-            android:id="@+id/logOutButton"
+            android:id="@+id/logOutButton2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="#F57C00"
@@ -91,5 +91,4 @@
             android:textColor="#FFFFFF" />
 
     </LinearLayout>
-
 </androidx.constraintlayout.widget.ConstraintLayout>
