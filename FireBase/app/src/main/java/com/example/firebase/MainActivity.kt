@@ -10,8 +10,10 @@ import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import com.google.android.gms.tasks.Task
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
@@ -75,10 +77,10 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun showAlert(){
+    private fun showAlert(error: String?){
         val builder = AlertDialog.Builder(this)
         builder.setTitle("Error")
-        builder.setMessage("Se ha producido un error al autenticar el usuario")
+        builder.setMessage("Se ha producido un error: $error")
         builder.setPositiveButton("Aceptar",null)
         val dialog: AlertDialog = builder.create()
         dialog.show()
@@ -90,21 +92,26 @@ class MainActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
-    private fun signUp(email:EditText, password: EditText){
-        if (email.text.isBlank()||password.text.isBlank()){
-            Toast.makeText(this,"Ingrese los datos",Toast.LENGTH_LONG).show()
-        }else{
+    private fun signUp(email: EditText, password: EditText) {
+        if (email.text.isBlank() || password.text.isBlank()) {
+            Toast.makeText(this, "Ingrese los datos", Toast.LENGTH_LONG).show()
+        } else if(password.text.length < 6){
+            password.error = "Ingrese una contraseña mayor de 6 dígitos"
+        }
+        else {
             auth.createUserWithEmailAndPassword(email.text.toString(), password.text.toString())
-                .addOnCompleteListener(this) {
-                    if(it.isSuccessful){
+                .addOnCompleteListener(this) { task ->
+                    if (task.isSuccessful) {
                         Toast.makeText(this, "Registro exitoso", Toast.LENGTH_LONG).show()
-                    }else{
-                        showAlert()
+                    } else {
+                        val error = task.exception?.message
+                        showAlert(error)
+                        //Toast.makeText(this, "Error: $error", Toast.LENGTH_LONG).show()
                     }
-
                 }
         }
     }
+
 
     private fun logIn(email:EditText, password: EditText, activity:Class<out Activity>, provider: ProviderType){
         if (email.text.isBlank()||password.text.isBlank()){
@@ -119,7 +126,7 @@ class MainActivity : AppCompatActivity() {
                         }
                         startActivity(intent)
                     } else {
-                        showAlert()
+                        //showAlert(it)
                     }
                 }
 
