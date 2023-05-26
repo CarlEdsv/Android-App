@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.preference.PreferenceManager
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
@@ -36,14 +37,14 @@ class MainActivity : AppCompatActivity() {
         val email = findViewById<EditText>(R.id.emailText)
         val password = findViewById<EditText>(R.id.passwText)
 
-        val reg = findViewById<Button>(R.id.signupButton)
-        reg.setOnClickListener {
-            signUp(email, password)
-        }
 
         val log = findViewById<Button>(R.id.loginButton)
         log.setOnClickListener {
-            logIn(email, password,Students::class.java,ProviderType.BASIC)
+            if(email.text.contains("@ugb.edu.sv")){
+                email.error = "Está tratando de ingresar con un correo docente"
+            }else{
+                logIn(email, password,Students::class.java,ProviderType.BASIC)
+            }
         }
 
         ///////////////////////////////////////////////////////////////////////////////////////////
@@ -51,13 +52,14 @@ class MainActivity : AppCompatActivity() {
         val email2 = findViewById<EditText>(R.id.emailText2)
         val password2 = findViewById<EditText>(R.id.passwText2)
 
-        val reg2 = findViewById<Button>(R.id.signupButton2)
-        reg2.setOnClickListener {
-            signUp(email2,password2)
-        }
         val log2 = findViewById<Button>(R.id.loginButton2)
         log2.setOnClickListener {
-            logIn(email2, password2, Teachers::class.java, ProviderType.BASIC)
+
+            if(email2.text.contains("@ugb.edu.sv")){
+                logIn(email2, password2, Teachers::class.java, ProviderType.BASIC)
+            }else{
+                email2.error="Debe ingresar con un correo docente"
+            }
         }
 
     }
@@ -77,10 +79,10 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun showAlert(error: String?){
+    private fun showAlert(){
         val builder = AlertDialog.Builder(this)
         builder.setTitle("Error")
-        builder.setMessage("Se ha producido un error: $error")
+        builder.setMessage("Se ha producido un error")
         builder.setPositiveButton("Aceptar",null)
         val dialog: AlertDialog = builder.create()
         dialog.show()
@@ -104,9 +106,7 @@ class MainActivity : AppCompatActivity() {
                     if (task.isSuccessful) {
                         Toast.makeText(this, "Registro exitoso", Toast.LENGTH_LONG).show()
                     } else {
-                        val error = task.exception?.message
-                        showAlert(error)
-                        //Toast.makeText(this, "Error: $error", Toast.LENGTH_LONG).show()
+                        showAlert()
                     }
                 }
         }
@@ -117,22 +117,32 @@ class MainActivity : AppCompatActivity() {
         if (email.text.isBlank()||password.text.isBlank()){
             Toast.makeText(this,"Ingrese los datos",Toast.LENGTH_LONG).show()
         }else{
+
             auth.signInWithEmailAndPassword(email.text.toString(), password.text.toString())
-                .addOnCompleteListener(this) {
-                    if (it.isSuccessful) {
-                        val intent = Intent(this, activity).apply {
-                            putExtra("email", email.text.toString())
-                            putExtra("provider",provider.name)
-                        }
-                        startActivity(intent)
-                    } else {
-                        //showAlert(it)
+                .addOnSuccessListener {
+                    val intent = Intent(this, activity).apply {
+                        putExtra("email", email.text.toString())
+                        putExtra("provider",provider.name)
                     }
+                    startActivity(intent)
                 }
+                .addOnFailureListener{
+                    showAlert()
+                }
+
 
         }
 
     }
+
+    private fun activity(email: EditText,activity:Class<out Activity>,provider: ProviderType ){
+        val intent = Intent(this, activity).apply {
+            putExtra("email", email.text.toString())
+            putExtra("provider",provider.name)
+        }
+        startActivity(intent)
+    }
+
 }
 
 

@@ -9,9 +9,15 @@ import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Spinner
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import com.bumptech.glide.Glide
+import com.example.firebase.databinding.ActivityTeachersBinding
+import com.example.firebase.databinding.StudentsBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.FieldValue
+import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
 enum class ProviderType{
@@ -24,9 +30,14 @@ class Students : AppCompatActivity() {
 
     private lateinit var documento : Documento
 
+    private lateinit var binding: StudentsBinding
+
+    private val db = Firebase.firestore
     override fun onCreate(savedInstanceState: Bundle?) {
+        binding = StudentsBinding.inflate(layoutInflater)
+
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.students)
+        setContentView(binding.root)
 
         title = "Inicio"
 
@@ -36,52 +47,22 @@ class Students : AppCompatActivity() {
 
         val bundle: Bundle? = intent.extras
         val email = bundle?.getString("email")
-        val provider = bundle?.getString("provider")
+        //val provider = bundle?.getString("provider")
 
-        val logData = getSharedPreferences(getString(R.string.prefs_file), Context.MODE_PRIVATE).edit()
-        logData.putString("email",email)
-        logData.putString("provider",provider)
-        logData.apply()
 
-        val name = findViewById<EditText>(R.id.nameText)
-        val age = findViewById<EditText>(R.id.ageText)
-        val grade = findViewById<Spinner>(R.id.spinner)
+        //logData.putString("provider",provider)
 
-        val grades = listOf(
-            "Grados", "Primero", "Segundo", "Tercero", "Cuarto",
-            "Quinto", "Sexto", "Séptimo", "Octavo", "Noveno"
-        )
-
-        val spinnerAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, grades)
-
-        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        grade.adapter = spinnerAdapter
-
-        val add = findViewById<Button>(R.id.addButton)
-
-        add.setOnClickListener {
-
-            //regDialog(this)
-
-            val opcion = grade.selectedItem.toString()
-            val agenum = age.text.toString().toIntOrNull()?: 0
-
-            val student = hashMapOf<String, Any>(
-                "nombre" to name.text.toString(),
-                "edad" to agenum,
-                "grado" to opcion
-            )
-
-            documento.adDocument(name, age,grade,"students",student,this)
+        if(email!=null){
+            showQr(email)
         }
 
-        val show = findViewById<Button>(R.id.showButtton)
+        /*val show = findViewById<Button>(R.id.showButtton)
         show.setOnClickListener {
             val intent = Intent(this, Home::class.java).apply {
                 putExtra("cero",0)
             }
             startActivity(intent)
-        }
+        }*/
 
         val logOut = findViewById<Button>(R.id.logOutButton)
         logOut.setOnClickListener {
@@ -96,48 +77,40 @@ class Students : AppCompatActivity() {
 
     }
 
-    /*private fun regDialog(contexto: Context) {
+    private fun showQr(email: String) {
+        val preferences = getSharedPreferences("MyPreferences", Context.MODE_PRIVATE)
+        val savedImageUrl = preferences.getString("qrImageUrl", null)
 
-        val grades2 = listOf(
-            "Grados", "Primero", "Segundo", "Tercero", "Cuarto",
-            "Quinto", "Sexto", "Séptimo", "Octavo", "Noveno"
-        )
+        if (savedImageUrl != null) {
+            Glide.with(this)
+                .load(savedImageUrl)
+                .into(binding.qrImage)
+        } else {
+            db.collection("students").document(email).get()
+                .addOnSuccessListener { document ->
+                    if (document != null) {
+                        val inf = document.data
+                        val urlImageQr = inf?.get("URL").toString()
 
-        val dialogView = LayoutInflater.from(contexto).inflate(R.layout.dialog_layout, null)
+                        val editor = preferences.edit()
+                        editor.putString("qrImageUrl", urlImageQr)
+                        editor.apply()
 
-        val builder = AlertDialog.Builder(contexto)
-            .setView(dialogView)
-            .setTitle("ingresar Datos")
-            .setCancelable(false)
-            .setPositiveButton("Guardar") { dialog, which ->
+                        // Cargar la imagen desde la URL
+                        Glide.with(this)
+                            .load(urlImageQr)
+                            .into(binding.qrImage)
+                    } else {
+                        Toast.makeText(this, "Qr no encontrado", Toast.LENGTH_LONG).show()
+                    }
+                }
+                .addOnFailureListener { exception ->
+                    Toast.makeText(this, "Problemas de tipo: $exception", Toast.LENGTH_LONG).show()
+                }
+        }
+    }
 
-                val text1 = findViewById<EditText>(R.id.edit_text_1)
-                val text2 = findViewById<EditText>(R.id.edit_text_2)
-                val spinnerDialog = findViewById<Spinner>(R.id.DialogSpinner)
 
-                val spinDiagAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, grades2)
-
-                spinDiagAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-                spinnerDialog.adapter = spinDiagAdapter
-
-                val opcion = spinnerDialog.selectedItem.toString()
-                val agenum = text2.text.toString().toIntOrNull()?: 0
-
-                val student = hashMapOf<String, Any>(
-                    "nombre" to text1.text.toString(),
-                    "edad" to agenum,
-                    "grado" to opcion
-                )
-
-                documento.adDocument(text1, text2,spinnerDialog,"students",student,contexto)
-            }
-            .setNegativeButton("Salir") { dialog, which ->
-                dialog.dismiss()
-            }
-
-        val alertDialog = builder.create()
-        alertDialog.show()
-    }*/
 }
 
 

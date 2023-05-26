@@ -20,35 +20,17 @@
 
         />
 
+
+
         ]]>
 
-        <EditText
-            android:id="@+id/nameText2"
+        <Button
+            android:id="@+id/btnScanner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="Nombre"
-            android:inputType="text"
-            android:textColor="@android:color/black"
-            android:textColorHint="#000000" />
-
-        <EditText
-            android:id="@+id/ageText2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="Edad"
-            android:inputType="number"
-            android:textColor="@android:color/black"
-            android:textColorHint="#000000" />
-
-        <Spinner
-            android:id="@+id/spinner2"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:background="#FF8A65"
-            android:hapticFeedbackEnabled="false"
-            android:textColor="@color/black" />
+            android:backgroundTint="#039BE5"
+            android:textColor="#FFFFFF"
+            android:text="Escanear" />
 
         <Space
             android:layout_width="match_parent"
@@ -58,19 +40,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/addButton2"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:backgroundTint="#006064"
-                android:text="Agregar datos"
-                android:textColor="#FFFFFF" />
-
-            <Space
-                android:layout_width="8dp"
-                android:layout_height="wrap_content" />
 
             <Button
                 android:id="@+id/showButtton2"
