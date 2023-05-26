@@ -8,6 +8,7 @@
     tools:context=".Students" >
 
     <LinearLayout
+        android:id="@+id/stLayout"
         android:layout_width="409dp"
         android:layout_height="729dp"
         android:layout_marginStart="16dp"

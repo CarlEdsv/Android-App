@@ -86,33 +86,12 @@ class MainActivity : AppCompatActivity() {
         builder.setPositiveButton("Aceptar",null)
         val dialog: AlertDialog = builder.create()
         dialog.show()
-
     }
 
     private fun onActivity(context: Class<out Activity>) {
         val intent = Intent(this, context)
         startActivity(intent)
     }
-
-    private fun signUp(email: EditText, password: EditText) {
-        if (email.text.isBlank() || password.text.isBlank()) {
-            Toast.makeText(this, "Ingrese los datos", Toast.LENGTH_LONG).show()
-        } else if(password.text.length < 6){
-            password.error = "Ingrese una contraseña mayor de 6 dígitos"
-        }
-        else {
-            auth.createUserWithEmailAndPassword(email.text.toString(), password.text.toString())
-                .addOnCompleteListener(this) { task ->
-                    if (task.isSuccessful) {
-                        Toast.makeText(this, "Registro exitoso", Toast.LENGTH_LONG).show()
-                    } else {
-                        showAlert()
-                    }
-                }
-        }
-    }
-
-
     private fun logIn(email:EditText, password: EditText, activity:Class<out Activity>, provider: ProviderType){
         if (email.text.isBlank()||password.text.isBlank()){
             Toast.makeText(this,"Ingrese los datos",Toast.LENGTH_LONG).show()
@@ -135,13 +114,23 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    private fun activity(email: EditText,activity:Class<out Activity>,provider: ProviderType ){
-        val intent = Intent(this, activity).apply {
-            putExtra("email", email.text.toString())
-            putExtra("provider",provider.name)
+    /*private fun signUp(email: EditText, password: EditText) {
+        if (email.text.isBlank() || password.text.isBlank()) {
+            Toast.makeText(this, "Ingrese los datos", Toast.LENGTH_LONG).show()
+        } else if(password.text.length < 6){
+            password.error = "Ingrese una contraseña mayor de 6 dígitos"
         }
-        startActivity(intent)
-    }
+        else {
+            auth.createUserWithEmailAndPassword(email.text.toString(), password.text.toString())
+                .addOnCompleteListener(this) { task ->
+                    if (task.isSuccessful) {
+                        Toast.makeText(this, "Registro exitoso", Toast.LENGTH_LONG).show()
+                    } else {
+                        showAlert()
+                    }
+                }
+        }
+    }*/
 
 }
 
