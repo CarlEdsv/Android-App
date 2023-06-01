@@ -31,15 +31,18 @@ class Students : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
 
     private lateinit var documento : Documento
-
     private lateinit var binding: StudentsBinding
 
     private val db = Firebase.firestore
-    override fun onCreate(savedInstanceState: Bundle?) {
-        binding = StudentsBinding.inflate(layoutInflater)
 
+    lateinit var sqliteHelper:SqliteHelper
+
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        binding = StudentsBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        sqliteHelper = SqliteHelper(this)
 
         title = "Inicio"
 
@@ -49,55 +52,47 @@ class Students : AppCompatActivity() {
 
         val bundle: Bundle? = intent.extras
         val email = bundle?.getString("email")
-        val pref = getSharedPreferences("Preferencias", Context.MODE_PRIVATE).edit()
-        pref.putString("email",email)
-        pref.apply()
+        val pref = getSharedPreferences("Preferencias", Context.MODE_PRIVATE)
+        val editor = pref.edit()
+        editor.putString("email", email)
+        editor.apply()
 
-        if(email!=null){
-            showQr(email)
-        }
-
-        /*val show = findViewById<Button>(R.id.showButtton)
-        show.setOnClickListener {
-            val intent = Intent(this, Home::class.java).apply {
-                putExtra("cero",0)
-            }
-            startActivity(intent)
-        }*/
-
-        val logOut = findViewById<Button>(R.id.logOutButton)
-        logOut.setOnClickListener {
-
-            pref.clear()
-            pref.apply()
+        binding.logOutButton.setOnClickListener {
+            editor.clear()
+            editor.apply()
 
             auth.signOut()
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
         }
 
+        binding.tarea.setOnClickListener{
+            val intent = Intent(this, Home::class.java)
+            startActivity(intent)
+        }
+
+        binding.txTarea.setOnClickListener{
+            val intent = Intent(this, Home::class.java)
+            startActivity(intent)
+        }
+
+        binding.contador.text = sqliteHelper.numTareas()
     }
 
     override fun onStart() {
-        /*val bundle: Bundle? = intent.extras
-        val email = bundle?.getString("email")
-        if(email!=null){
-            showQr(email)
-        }*/
         super.onStart()
         auth = Firebase.auth
 
-        val stLayout = findViewById<LinearLayout>(R.id.stLayout)
-        stLayout.visibility = View.VISIBLE
+        binding.stLayout.visibility = View.VISIBLE
         val currentUser = auth.currentUser
 
         val email = currentUser?.let {
             it.email.toString()
         }
-        if(email!= null){
+        if (email != null) {
             showQr(email)
+            binding.email.text=email.toString()
         }
-
     }
 
     private fun showQr(email: String) {

@@ -55,7 +55,7 @@ class Documento {
         db.collection(collectionPath)
             .get()
             .addOnSuccessListener { result ->
-                for (document in result) {
+                /*for (document in result) {
                     val doc = document.data
                     if (doc.containsKey(field1) && doc.containsKey(field2) && doc.containsKey(field3)) {
                         myList.add(Data(
@@ -66,7 +66,7 @@ class Documento {
                         )
                     }
                     recycler.adapter = Adaptador(myList)
-                }
+                }*/
             }
             .addOnFailureListener { exception ->
                 Toast.makeText(contexto,"Consulta de datos fallida: $exception",Toast.LENGTH_LONG).show()

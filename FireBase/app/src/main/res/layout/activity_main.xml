@@ -35,7 +35,8 @@
             android:textColor="#000000"
             android:textColorHint="#000000"
             tools:layout_editor_absoluteX="101dp"
-            tools:layout_editor_absoluteY="154dp" />
+            tools:layout_editor_absoluteY="154dp"
+            />
 
         <Space
             android:layout_width="match_parent"
