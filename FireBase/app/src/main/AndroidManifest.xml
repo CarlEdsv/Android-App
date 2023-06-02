@@ -18,6 +18,9 @@
         android:theme="@style/Theme.FireBase"
         tools:targetApi="31">
         <activity
+            android:name=".Splash"
+            android:exported="false" />
+        <activity
             android:name=".Tarea"
             android:exported="false" />
         <activity
@@ -31,8 +34,7 @@
             android:exported="false" />
         <activity
             android:name=".MainActivity"
-            android:exported="true"
-            >
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
