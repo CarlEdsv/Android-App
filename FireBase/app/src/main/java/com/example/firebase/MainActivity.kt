@@ -2,19 +2,20 @@ package com.example.firebase
 
 import android.app.Activity
 import android.content.Intent
+import android.opengl.Visibility
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.preference.PreferenceManager
+import android.text.method.HideReturnsTransformationMethod
+import android.text.method.PasswordTransformationMethod
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import com.google.android.gms.tasks.Task
+import com.example.firebase.databinding.ActivityMainBinding
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
-import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
@@ -24,11 +25,14 @@ class MainActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
 
     private lateinit var firebaseAnalytics: FirebaseAnalytics
+
+    private lateinit var binding: ActivityMainBinding
     override fun onCreate(savedInstanceState: Bundle?) {
+        binding = ActivityMainBinding.inflate(layoutInflater)
         /*Thread.sleep(2000)
         setTheme(R.style.Theme_FireBase)*/
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(binding.root)
 
         auth = Firebase.auth
 
@@ -36,34 +40,49 @@ class MainActivity : AppCompatActivity() {
 
         title = "Autenticación"
 
-        val email = findViewById<EditText>(R.id.emailText)
-        val password = findViewById<EditText>(R.id.passwText)
-
-
-        val log = findViewById<Button>(R.id.loginButton)
-        log.setOnClickListener {
-            if(email.text.contains("@ugb.edu.sv")){
-                email.error = "Está tratando de ingresar con un correo docente"
-            }else{
-                logIn(email, password,Students::class.java,ProviderType.BASIC)
+        binding.loginButton.setOnClickListener {
+            if (binding.emailText.text.contains("@ugb.edu.sv")) {
+                binding.emailText.error = "Está tratando de ingresar con un correo docente"
+            } else {
+                logIn(binding.emailText, binding.passwText, Students::class.java, ProviderType.BASIC)
             }
         }
 
         ///////////////////////////////////////////////////////////////////////////////////////////
 
-        val email2 = findViewById<EditText>(R.id.emailText2)
-        val password2 = findViewById<EditText>(R.id.passwText2)
-
-        val log2 = findViewById<Button>(R.id.loginButton2)
-        log2.setOnClickListener {
-
-            if(email2.text.contains("@ugb.edu.sv")){
-                logIn(email2, password2, Teachers::class.java, ProviderType.BASIC)
-            }else{
-                email2.error="Debe ingresar con un correo docente"
+        binding.loginButton2.setOnClickListener {
+            if (binding.emailText2.text.contains("@ugb.edu.sv")) {
+                logIn(binding.emailText2, binding.passwText2, Teachers::class.java, ProviderType.BASIC)
+            } else {
+                binding.emailText2.error = "Debe ingresar con un correo docente"
             }
         }
 
+        var passVisibility = false
+        binding.showPass.setOnClickListener {
+            passVisibility = !passVisibility // Invertir el estado de visibilidad
+
+            if (passVisibility) {
+                // Mostrar la contraseña
+                binding.passwText.transformationMethod = HideReturnsTransformationMethod.getInstance()
+            } else {
+                // Ocultar la contraseña
+                binding.passwText.transformationMethod = PasswordTransformationMethod.getInstance()
+            }
+
+        }
+
+        binding.showpass2.setOnClickListener {
+            passVisibility = !passVisibility // Invertir el estado de visibilidad
+
+            if (passVisibility) {
+                // Mostrar la contraseña
+                binding.passwText2.transformationMethod = HideReturnsTransformationMethod.getInstance()
+            } else {
+                // Ocultar la contraseña
+                binding.passwText2.transformationMethod = PasswordTransformationMethod.getInstance()
+            }
+        }
     }
 
     override fun onStart() {
@@ -113,6 +132,22 @@ class MainActivity : AppCompatActivity() {
                 }
 
 
+        }
+
+    }
+
+    private fun showPass(passText: EditText, button: Button){
+        var passVisibility = false
+        button.setOnClickListener {
+            passVisibility = !passVisibility // Invertir el estado de visibilidad
+
+            if (passVisibility) {
+                // Mostrar la contraseña
+                passText.transformationMethod = HideReturnsTransformationMethod.getInstance()
+            } else {
+                // Ocultar la contraseña
+                passText.transformationMethod = PasswordTransformationMethod.getInstance()
+            }
         }
 
     }
