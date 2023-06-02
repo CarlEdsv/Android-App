@@ -21,12 +21,6 @@
             android:name=".Tarea"
             android:exported="false" />
         <activity
-            android:name=".Asignatura"
-            android:exported="false" />
-        <activity
-            android:name=".Seguimiento"
-            android:exported="false" />
-        <activity
             android:name=".Teachers"
             android:exported="false" />
         <activity
@@ -37,7 +31,8 @@
             android:exported="false" />
         <activity
             android:name=".MainActivity"
-            android:exported="true">
+            android:exported="true"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

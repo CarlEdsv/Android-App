@@ -6,4 +6,8 @@
     </style>
 
     <style name="Theme.FireBase" parent="Base.Theme.FireBase" />
+
+    <style name="splashTheme." parent="Theme.FireBase">
+        <item name="android:windowBackground">@drawable/splashscreen</item>
+    </style>
 </resources>

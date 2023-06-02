@@ -25,6 +25,8 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var firebaseAnalytics: FirebaseAnalytics
     override fun onCreate(savedInstanceState: Bundle?) {
+        /*Thread.sleep(2000)
+        setTheme(R.style.Theme_FireBase)*/
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
@@ -79,10 +81,11 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun showAlert(){
+    private fun showAlert(error: String){
         val builder = AlertDialog.Builder(this)
         builder.setTitle("Error")
-        builder.setMessage("Se ha producido un error")
+        builder.setMessage("Se ha producido un erroral autenticar el usuario")
+        builder.setMessage("Se ha producido un error: $error")
         builder.setPositiveButton("Aceptar",null)
         val dialog: AlertDialog = builder.create()
         dialog.show()
@@ -105,8 +108,8 @@ class MainActivity : AppCompatActivity() {
                     }
                     startActivity(intent)
                 }
-                .addOnFailureListener{
-                    showAlert()
+                .addOnFailureListener{e->
+                    showAlert(e.toString())
                 }
 
 

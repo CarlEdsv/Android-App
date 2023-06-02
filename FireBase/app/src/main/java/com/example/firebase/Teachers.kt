@@ -2,14 +2,22 @@ package com.example.firebase
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
+import android.webkit.WebChromeClient
+import android.webkit.WebResourceError
+import android.webkit.WebResourceRequest
+import android.webkit.WebView
+import android.webkit.WebViewClient
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Spinner
 import android.widget.Toast
+import androidx.core.view.isInvisible
 import androidx.viewbinding.ViewBinding
 import com.example.firebase.databinding.ActivityTeachersBinding
 import com.google.firebase.auth.FirebaseAuth
@@ -66,7 +74,9 @@ class Teachers : AppCompatActivity() {
             startActivity(intent)
         }
 
-        binding.gSheet.setOnClickListener {
+
+
+        /*binding.gSheet.setOnClickListener {
             val webPage: Uri = Uri.
             parse("https://docs.google.com/spreadsheets/d/1LLVaT-4_xt38BfiKLBJL3JPEuudJApLmTHkTOqB6bGE/edit#gid=0")
             val intent = Intent(Intent.ACTION_VIEW, webPage)
@@ -75,7 +85,44 @@ class Teachers : AppCompatActivity() {
             }else{
                 Toast.makeText(this, "Error al cargar la página", Toast.LENGTH_LONG).show()
             }
+        }*/
+
+        binding.refrescar.setOnClickListener {
+            recreate()
         }
+
+        binding.sheet.webChromeClient = object : WebChromeClient(){
+
+        }
+
+        binding.sheet.webViewClient = object : WebViewClient(){
+            /*override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
+                return false
+            }
+
+            override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
+                super.onPageStarted(view, url, favicon)
+
+                binding.swipeRefresh.isRefreshing = true
+            }
+
+            override fun onPageFinished(view: WebView?, url: String?) {
+                super.onPageFinished(view, url)
+                binding.swipeRefresh.isRefreshing = false
+            }
+
+            override fun onReceivedError(
+                view: WebView?,
+                request: WebResourceRequest?,
+                error: WebResourceError?
+            ) {
+                super.onReceivedError(view, request, error)
+                Log.d("Error","Error de tipo: $error")
+            }*/
+        }
+        val shSettings = binding.sheet.settings
+        shSettings.javaScriptEnabled = true
+        binding.sheet.loadUrl("https://docs.google.com/spreadsheets/d/1LLVaT-4_xt38BfiKLBJL3JPEuudJApLmTHkTOqB6bGE/edit?usp=sharing")
 
         /*val pref = getSharedPreferences("Preferencias", Context.MODE_PRIVATE)
         val url = pref.getString("url",null)
@@ -103,6 +150,19 @@ class Teachers : AppCompatActivity() {
                 Toast.makeText(this, "Cancelado", Toast.LENGTH_LONG).show()
             } else {
                 Toast.makeText(this, "Registro exitoso, diríjase al sheet para ver los datos", Toast.LENGTH_LONG).show()
+
+                binding.WebView.isInvisible = true
+                binding.WebView.isEnabled = false
+                binding.WebView.webChromeClient = object : WebChromeClient(){
+
+                }
+                binding.WebView.webViewClient = object : WebViewClient(){
+
+                }
+                val settings = binding.WebView.settings
+                settings.javaScriptEnabled = false
+                binding.WebView.loadUrl(result.contents.toString())
+
                 /*val pref = getSharedPreferences("Preferencias", Context.MODE_PRIVATE).edit()
                 pref.putString("url",result.contents.toString())
                 pref.apply()*/
